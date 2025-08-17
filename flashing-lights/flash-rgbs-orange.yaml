@@ -1,0 +1,40 @@
+alias: Flash RGB Lights Orange (2 Min)
+description: Flashes all RGB-capable lights orange for 2 minutes
+mode: single
+sequence:
+  - alias: Set initial color to orange
+    data:
+      rgb_color:
+        - 255
+        - 165
+        - 0
+      brightness: 255
+    target:
+      entity_id: light.rgb_capable_lights
+    action: light.turn_on
+  - alias: Start flashing loop
+    repeat:
+      count: 40
+      sequence:
+        - data:
+            rgb_color:
+              - 255
+              - 165
+              - 0
+            brightness: 255
+          target:
+            entity_id: light.rgb_capable_lights
+          action: light.turn_on
+        - delay:
+            seconds: 1.5
+        - target:
+            entity_id: light.rgb_capable_lights
+          action: light.turn_off
+          data: {}
+        - delay:
+            seconds: 1.5
+  - alias: Ensure lights are off at end
+    target:
+      entity_id: light.rgb_capable_lights
+    action: light.turn_off
+    data: {}

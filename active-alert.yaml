@@ -1,0 +1,48 @@
+alias: Active red alert - Your Alert Area
+description: Trigger sirens and briefly turn on alert lights, then restore lighting
+triggers:
+  - alias: Red alert for Your Alert Area
+    entity_id: binary_sensor.oref_alert
+    to: "on"
+    trigger: state
+conditions: []
+actions:
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.77
+    target:
+      entity_id: media_player.redacted_group
+  - action: media_player.play_media
+    metadata:
+      title: red-alert-sound.mp3
+      thumbnail: null
+      media_class: music
+      children_media_class: null
+      navigateIds:
+        - {}
+        - media_content_type: app
+          media_content_id: media-source://media_source
+        - media_content_type: ""
+          media_content_id: media-source://media_source/local/storage
+        - media_content_type: ""
+          media_content_id: media-source://media_source/local/storage/audio
+        - media_content_type: ""
+          media_content_id: media-source://media_source/local/storage/audio/alerts
+    data:
+      media_content_id: >-
+        media-source://media_source/local/storage/audio/alerts/red-alert-sound.mp3
+      media_content_type: audio/mpeg
+    target:
+      entity_id: media_player.redacted_group
+  - action: script.activate_sirens
+    metadata: {}
+    data: {}
+  - action: script.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: script.flash_lights_red
+  - action: rest_command.your_alert_area_active
+    data: {}
+mode: restart

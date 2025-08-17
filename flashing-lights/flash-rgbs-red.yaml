@@ -1,0 +1,40 @@
+alias: Flash red lights - 3 minutes
+description: Flashes RGB-capable patio lights bright red for 3 minutes
+mode: single
+sequence:
+  - alias: Set initial color to red
+    data:
+      rgb_color:
+        - 255
+        - 0
+        - 0
+      brightness: 255
+    target:
+      entity_id: light.rgb_capable_lights
+    action: light.turn_on
+  - alias: Start flashing loop
+    repeat:
+      count: 60
+      sequence:
+        - data:
+            rgb_color:
+              - 255
+              - 0
+              - 0
+            brightness: 255
+          target:
+            entity_id: light.rgb_capable_lights
+          action: light.turn_on
+        - delay:
+            seconds: 1.5
+        - target:
+            entity_id: light.rgb_capable_lights
+          action: light.turn_off
+          data: {}
+        - delay:
+            seconds: 1.5
+  - alias: Ensure lights are off at end
+    target:
+      entity_id: light.rgb_capable_lights
+    action: light.turn_off
+    data: {}

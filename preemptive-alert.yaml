@@ -1,0 +1,47 @@
+alias: New preemptive alerts
+description: ""
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.oref_alert
+    attribute: selected_areas_updates
+conditions:
+  - condition: template
+    value_template: >-
+      {% set updates = trigger.to_state.attributes.selected_areas_updates %}
+      {{ updates and (
+          'בדקות הקרובות' in updates[0].get('text','') or
+          'בדקות הקרובות' in updates[0].get('title','')
+      ) }}
+actions:
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.75
+    target:
+      entity_id: media_player.redacted_group
+  - action: media_player.play_media
+    metadata: {}
+    data:
+      media_content_id: ""
+      media_content_type: ""
+    target:
+      entity_id: media_player.redacted_group
+  - action: script.flash_indicator_lights
+    metadata: {}
+    data: {}
+  - action: script.activate_sirens
+    metadata: {}
+    data: {}
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+        - light.redacted_bathroom
+        - light.redacted_office
+        - light.redacted_living_area
+  - action: rest_command.send_preemptive_alert
+    metadata: {}
+    data: {}
+  - delay:
+      minutes: 2

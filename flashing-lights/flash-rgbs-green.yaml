@@ -1,0 +1,40 @@
+alias: Flash RGB Lights Green (1 Min)
+description: Flashes all RGB-capable lights green for 1 minute
+mode: single
+sequence:
+  - alias: Set initial color to green
+    data:
+      rgb_color:
+        - 0
+        - 255
+        - 0
+      brightness: 255
+    target:
+      entity_id: light.rgb_capable_lights
+    action: light.turn_on
+  - alias: Start flashing loop
+    repeat:
+      count: 20
+      sequence:
+        - data:
+            rgb_color:
+              - 0
+              - 255
+              - 0
+            brightness: 255
+          target:
+            entity_id: light.rgb_capable_lights
+          action: light.turn_on
+        - delay:
+            seconds: 1.5
+        - target:
+            entity_id: light.rgb_capable_lights
+          action: light.turn_off
+          data: {}
+        - delay:
+            seconds: 1.5
+  - alias: Ensure lights are off at end
+    target:
+      entity_id: light.rgb_capable_lights
+    action: light.turn_off
+    data: {}
